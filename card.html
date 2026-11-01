@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Flip 7 - Komplettes Kartenset</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@600;700&display=swap');
+
+  body {
+    background: #22252a;
+    color: #fff;
+    padding: 25px;
+    font-family: sans-serif;
+  }
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+    margin-top: 30px;
+    color: #efe6c2;
+  }
+
+  .card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .card-button {
+    --accent-color: #48b8b8;
+    --frame-gold: #e6d130;
+    --outline-dark: #232755;
+    --bg-main: #efe6c2;
+    --bg-center: #fbf7e6;
+    --banner-bg: #fcf8e3;
+
+    position: relative;
+    width: 165px;
+    height: 230px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background: radial-gradient(circle at center, var(--bg-center) 20%, var(--bg-main) 85%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: inline-flex;
+  }
+
+  .card-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+  }
+
+  .card-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .stroke-dark {
+    stroke: var(--outline-dark);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .fill-accent { fill: var(--accent-color); }
+  .fill-gold { fill: var(--frame-gold); }
+  .fill-banner { fill: var(--banner-bg); }
+
+  /* Große Zahlen (Standard & Bonus) */
+  .card-number {
+    font-family: 'Oswald', sans-serif;
+    font-size: 112px;
+    font-weight: 700;
+    text-anchor: middle;
+  }
+
+  .card-number.is-double-digit {
+    font-size: 96px;
+    letter-spacing: -4px;
+  }
+
+  .card-number.is-bonus {
+    font-size: 88px;
+    letter-spacing: -2px;
+  }
+
+  .card-number.is-bonus-double {
+    font-size: 74px;
+    letter-spacing: -3px;
+  }
+
+  .number-outline-outer { fill: none; stroke: var(--outline-dark); stroke-width: 12px; stroke-linejoin: round; }
+  .number-outline-gold  { fill: none; stroke: var(--frame-gold);   stroke-width: 7px;  stroke-linejoin: round; }
+  .number-outline-inner { fill: none; stroke: var(--outline-dark); stroke-width: 3px;  stroke-linejoin: round; }
+  .number-fill          { fill: var(--accent-color); }
+
+  /* Texte & Beschriftungen */
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    text-anchor: middle;
+    fill: var(--frame-gold);
+    stroke: var(--outline-dark);
+    stroke-width: 1px;
+    paint-order: stroke fill;
+  }
+
+  .action-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-anchor: middle;
+    fill: #c9d2d9;
+    stroke: var(--outline-dark);
+    stroke-width: 3.5px;
+    paint-order: stroke fill;
+  }
+
+  .sub-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 7px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-anchor: middle;
+    fill: var(--outline-dark);
+  }
+</style>
+</head>
+<body>
+
+<h2>Kartenrückseite & Zahlenkarten (0 – 12)</h2>
+<div class="card-grid">
+  <!-- 0 bis 12 mit den exakten Farben aus der Übersicht -->
+  <button class="card-button" data-type="number" data-value="0"  data-label="NULL"   style="--accent-color: #d83b7c;" onclick="alert('0')"></button>
+  <button class="card-button" data-type="number" data-value="1"  data-label="EINS"   style="--accent-color: #9e8fb2;" onclick="alert('1')"></button>
+  <button class="card-button" data-type="number" data-value="2"  data-label="ZWEI"   style="--accent-color: #cddc39;" onclick="alert('2')"></button>
+  <button class="card-button" data-type="number" data-value="3"  data-label="DREI"   style="--accent-color: #e9596c;" onclick="alert('3')"></button>
+  <button class="card-button" data-type="number" data-value="4"  data-label="VIER"   style="--accent-color: #48b8b8;" onclick="alert('4')"></button>
+  <button class="card-button" data-type="number" data-value="5"  data-label="FÜNF"   style="--accent-color: #2eb85c;" onclick="alert('5')"></button>
+  <button class="card-button" data-type="number" data-value="6"  data-label="SECHS"  style="--accent-color: #9c4cad;" onclick="alert('6')"></button>
+  <button class="card-button" data-type="number" data-value="7"  data-label="SIEBEN" style="--accent-color: #c97a7e;" onclick="alert('7')"></button>
+  <button class="card-button" data-type="number" data-value="8"  data-label="ACHT"   style="--accent-color: #8ac97a;" onclick="alert('8')"></button>
+  <button class="card-button" data-type="number" data-value="9"  data-label="NEUN"   style="--accent-color: #f59e2d;" onclick="alert('9')"></button>
+  <button class="card-button" data-type="number" data-value="10" data-label="ZEHN"   style="--accent-color: #d62c2c;" onclick="alert('10')"></button>
+  <button class="card-button" data-type="number" data-value="11" data-label="ELF"    style="--accent-color: #5c7ec9;" onclick="alert('11')"></button>
+  <button class="card-button" data-type="number" data-value="12" data-label="ZWÖLF"  style="--accent-color: #8c7b99;" onclick="alert('12')"></button>
+</div>
+
+<h2>Bonuskarten (x2, +2, +4, +6, +8, +10)</h2>
+<div class="card-grid">
+  <button class="card-button" data-type="bonus" data-value="x2"  data-subtext="DIE SUMME DEINER ZAHLENKARTEN x2"  style="--bg-main: #eea644; --bg-center: #f7c97e; --accent-color: #d9534f;" onclick="alert('x2')"></button>
+  <button class="card-button" data-type="bonus" data-value="+2"  data-subtext="DIE SUMME DEINER ZAHLENKARTEN +2"  style="--bg-main: #eea644; --bg-center: #f7c97e; --accent-color: #d9534f;" onclick="alert('+2')"></button>
+  <button class="card-button" data-type="bonus" data-value="+4"  data-subtext="DIE SUMME DEINER ZAHLENKARTEN +4"  style="--bg-main: #eea644; --bg-center: #f7c97e; --accent-color: #d9534f;" onclick="alert('+4')"></button>
+  <button class="card-button" data-type="bonus" data-value="+6"  data-subtext="DIE SUMME DEINER ZAHLENKARTEN +6"  style="--bg-main: #eea644; --bg-center: #f7c97e; --accent-color: #d9534f;" onclick="alert('+6')"></button>
+  <button class="card-button" data-type="bonus" data-value="+8"  data-subtext="DIE SUMME DEINER ZAHLENKARTEN +8"  style="--bg-main: #eea644; --bg-center: #f7c97e; --accent-color: #d9534f;" onclick="alert('+8')"></button>
+  <button class="card-button" data-type="bonus" data-value="+10" data-subtext="DIE SUMME DEINER ZAHLENKARTEN +10" style="--bg-main: #eea644; --bg-center: #f7c97e; --accent-color: #d9534f;" onclick="alert('+10')"></button>
+</div>
+
+<h2>Aktionskarten</h2>
+<div class="card-grid">
+  <button class="card-button"
+    data-type="action-double"
+    data-icon="cards"
+    data-line1="FLIP"
+    data-line2="THREE"
+    data-top-text="SPIELE DIESE KARTE"
+    data-bottom-text="AUF EINE AKTIVE PERSON"
+    style="--bg-main: #e6d117; --bg-center: #f7ea72; --accent-color: #d9534f;"
+    onclick="alert('Flip Three!')"></button>
+
+  <button class="card-button"
+    data-type="action-single"
+    data-icon="lock"
+    data-line1="FREEZE"
+    data-top-text="SPIELE DIESE KARTE"
+    data-bottom-text="AUF EINE AKTIVE PERSON"
+    style="--bg-main: #72c4ec; --bg-center: #a9def7; --accent-color: #2c4a9a;"
+    onclick="alert('Freeze!')"></button>
+
+  <button class="card-button"
+    data-type="action-double"
+    data-icon="heart"
+    data-line1="SECOND"
+    data-line2="CHANCE"
+    data-top-text="BEHALTE DIESE KARTE"
+    data-bottom-text="BIS DU SIE BRAUCHST"
+    style="--bg-main: #d13a30; --bg-center: #e66057; --accent-color: #a6231b;"
+    onclick="alert('Second Chance!')"></button>
+</div>
+
+<script>
+  const baseFrame = `
+    <path class="fill-accent stroke-dark" d="M 55,0 A 35,32 0 0,0 125,0 L 116,0 A 26,23 0 0,1 64,0 Z" />
+    <path class="fill-accent stroke-dark" d="M 55,250 A 35,32 0 0,1 125,250 L 116,250 A 26,23 0 0,0 64,250 Z" />
+    <path class="fill-gold stroke-dark" d="
+      M 26,12 H 76 V 19 H 30 V 26 H 21 V 34 H 14 V 216 H 21 V 224 H 30 V 231 H 76 V 238 H 26 V 230 H 17 V 222 H 8 V 28 H 17 V 20 H 26 Z
+      M 154,12 H 104 V 19 H 150 V 26 H 159 V 34 H 166 V 216 H 159 V 224 H 150 V 231 H 104 V 238 H 154 V 230 H 163 V 222 H 172 V 28 H 163 V 20 H 154 Z
+    "/>
+  `;
+
+  const miniShell = `
+    <path d="M -22,0 Q -18,-12 0,-2 L 0,0 Z" fill="#d9534f" class="stroke-dark"/>
+    <path d="M -14,0 Q -9,-17 0,-3 L 0,0 Z" fill="#fcf8e3" class="stroke-dark"/>
+    <path d="M -5,0 Q 0,-20 5,0 Z" fill="#d9534f" class="stroke-dark"/>
+    <path d="M 14,0 Q 9,-17 0,-3 L 0,0 Z" fill="#fcf8e3" class="stroke-dark"/>
+    <path d="M 22,0 Q 18,-12 0,-2 L 0,0 Z" fill="#d9534f" class="stroke-dark"/>
+    <rect x="-24" y="0" width="48" height="4.5" rx="2" class="fill-gold stroke-dark"/>
+  `;
+
+  function getActionIcons(iconType) {
+    if (iconType === 'heart') {
+      const heart = `<path d="M 0,10 C 0,-8 -25,-8 -25,8 C -25,22 0,32 0,40 C 0,32 25,22 25,8 C 25,-8 0,-8 0,10 Z" fill="#d96b70" stroke="var(--outline-dark)" stroke-width="2.2"/>
+                     <path d="M 0,13 C 0,-3 -20,-3 -20,8 C -20,19 0,27 0,34 C 0,27 20,19 20,8 C 20,-3 0,-3 0,13 Z" fill="none" stroke="var(--outline-dark)" stroke-width="1.2"/>`;
+      return `<g transform="translate(42, 34)">${heart}</g><g transform="translate(138, 180)">${heart}</g>`;
+    }
+    if (iconType === 'lock') {
+      const lock = `
+        <path d="M -11,0 V -10 A 11,11 0 0,1 11,-10 V 0" fill="none" stroke="var(--outline-dark)" stroke-width="4.5"/>
+        <path d="M -11,0 V -10 A 11,11 0 0,1 11,-10 V 0" fill="none" stroke="#9daab6" stroke-width="2"/>
+        <rect x="-17" y="0" width="34" height="30" rx="10" fill="#8b97a5" stroke="var(--outline-dark)" stroke-width="2.2"/>
+        <circle cx="0" cy="12" r="3.5" fill="var(--outline-dark)"/>
+        <polygon points="-2,13 2,13 4,23 -4,23" fill="var(--outline-dark)"/>`;
+      const bolt = `
+        <g transform="rotate(-15)">
+          <text x="0" y="-11" class="sub-text" style="font-size:6px;">SOFORT-</text>
+          <polygon points="-18,-7 6,-7 -2,2 18,2 -14,13 -4,4 -18,4" fill="#2c4a9a" stroke="var(--outline-dark)" stroke-width="1.8" stroke-linejoin="round"/>
+          <text x="2" y="21" class="sub-text" style="font-size:6px;">AKTION</text>
+        </g>`;
+      return `<g transform="translate(44, 52)">${lock}</g><g transform="translate(136, 174)">${lock}</g>
+              <g transform="translate(128, 56)">${bolt}</g><g transform="translate(52, 192)">${bolt}</g>`;
+    }
+    if (iconType === 'cards') {
+      const cards = `
+        <rect x="-14" y="-15" width="18" height="28" rx="2" transform="rotate(-15)" fill="#d9534f" stroke="var(--outline-dark)" stroke-width="2"/>
+        <rect x="-6" y="-16" width="18" height="28" rx="2" transform="rotate(4)" fill="#fcf8e3" stroke="var(--outline-dark)" stroke-width="2"/>
+        <rect x="2" y="-14" width="18" height="28" rx="2" transform="rotate(22)" fill="#9daab6" stroke="var(--outline-dark)" stroke-width="2"/>`;
+      const bolt = `
+        <g transform="rotate(-15)">
+          <text x="0" y="-11" class="sub-text" style="font-size:6px;">SOFORT-</text>
+          <polygon points="-18,-7 6,-7 -2,2 18,2 -14,13 -4,4 -18,4" fill="#f08c2b" stroke="var(--outline-dark)" stroke-width="1.8" stroke-linejoin="round"/>
+          <text x="2" y="21" class="sub-text" style="font-size:6px;">AKTION</text>
+        </g>`;
+      return `<g transform="translate(46, 56)">${cards}</g><g transform="translate(134, 188)">${cards}</g>
+              <g transform="translate(128, 56)">${bolt}</g><g transform="translate(52, 192)">${bolt}</g>`;
+    }
+    return '';
+  }
+
+  document.querySelectorAll('.card-button').forEach(btn => {
+    const type = btn.dataset.type;
+    let innerSVG = baseFrame;
+
+    if (type === 'number') {
+      const val = btn.dataset.value || '0';
+      const label = btn.dataset.label || '';
+      const isDouble = val.length > 1 ? 'is-double-digit' : '';
+
+      // Bei "1" und "8" hat das Original leicht abweichende Banner-Höhen; hier einheitlich oder optional anpassbar
+      innerSVG += `
+        <g class="fill-accent stroke-dark">
+          <path d="M 0,55 Q 16,60 12,72 L 0,95 Z" /><path d="M 0,68 Q 22,74 17,86 L 0,105 Z" /><path d="M 0,82 Q 26,88 20,101 L 0,115 Z" /><path d="M 0,98 Q 26,104 20,117 L 0,126 Z" /><path d="M 0,115 Q 23,120 17,132 L 0,138 Z" /><path d="M 0,130 Q 17,135 12,146 L 0,149 Z" />
+        </g>
+        <g class="fill-accent stroke-dark" transform="translate(180, 0) scale(-1, 1)">
+          <path d="M 0,55 Q 16,60 12,72 L 0,95 Z" /><path d="M 0,68 Q 22,74 17,86 L 0,105 Z" /><path d="M 0,82 Q 26,88 20,101 L 0,115 Z" /><path d="M 0,98 Q 26,104 20,117 L 0,126 Z" /><path d="M 0,115 Q 23,120 17,132 L 0,138 Z" /><path d="M 0,130 Q 17,135 12,146 L 0,149 Z" />
+        </g>
+        <g class="fill-banner stroke-dark">
+          <polygon points="7,162 17,166 17,174 7,170" /><polygon points="6,176 18,180 18,189 6,185" />
+          <polygon points="173,162 163,166 163,174 173,170" /><polygon points="174,176 162,180 162,189 174,185" />
+        </g>
+        <g transform="translate(90, 102) skewX(-6)">
+          <text class="card-number ${isDouble} number-outline-outer" dy="0.36em">${val}</text>
+          <text class="card-number ${isDouble} number-outline-gold" dy="0.36em">${val}</text>
+          <text class="card-number ${isDouble} number-outline-inner" dy="0.36em">${val}</text>
+          <text class="card-number ${isDouble} number-fill" dy="0.36em">${val}</text>
+        </g>
+        <rect class="fill-banner stroke-dark" x="7" y="193" width="166" height="30" />
+        <line stroke="#e6d130" stroke-width="2" x1="9" y1="196" x2="171" y2="196" />
+        <line stroke="#e6d130" stroke-width="2" x1="9" y1="220" x2="171" y2="220" />
+        <text class="card-label" x="90" y="214">${label}</text>
+      `;
+    }
+
+    else if (type === 'bonus') {
+      const val = btn.dataset.value || '+2';
+      const subtext = btn.dataset.subtext || '';
+      const bonusClass = val.length > 2 ? 'is-bonus-double' : 'is-bonus';
+      innerSVG += `
+        <g transform="translate(90, 48)">${miniShell}</g>
+        <text class="sub-text" x="90" y="64">${subtext}</text>
+        <g transform="translate(88, 125) skewX(-6)">
+          <text class="card-number ${bonusClass} number-outline-outer" dy="0.36em">${val}</text>
+          <text class="card-number ${bonusClass} number-outline-gold" dy="0.36em">${val}</text>
+          <text class="card-number ${bonusClass} number-outline-inner" dy="0.36em">${val}</text>
+          <text class="card-number ${bonusClass} number-fill" dy="0.36em">${val}</text>
+        </g>
+        <text class="sub-text" x="90" y="191">${subtext}</text>
+        <g transform="translate(90, 202) scale(1, -1)">${miniShell}</g>
+      `;
+    }
+
+    else if (type === 'back') {
+      innerSVG += `
+        <g transform="translate(72, 60) rotate(-14)">${miniShell}</g>
+        <g transform="translate(90, 92) rotate(-14)">
+          <rect x="-82" y="-22" width="130" height="38" class="fill-banner stroke-dark"/>
+          <text class="action-title" style="fill:#e6d130; font-size:30px;" x="-18" y="8">FLIP</text>
+          <g transform="translate(56, 2)">
+            <text class="card-number is-bonus number-outline-outer" style="font-size:68px;" dy="0.32em">7</text>
+            <text class="card-number is-bonus number-outline-gold" style="font-size:68px;" dy="0.32em">7</text>
+            <text class="card-number is-bonus number-fill" style="font-size:68px;" dy="0.32em">7</text>
+          </g>
+        </g>
+      `;
+    }
+
+    else if (type === 'action-double') {
+      const l1 = btn.dataset.line1 || '';
+      const l2 = btn.dataset.line2 || '';
+      const topTxt = btn.dataset.topText || '';
+      const botTxt = btn.dataset.bottomText || '';
+      innerSVG += getActionIcons(btn.dataset.icon) + `
+        <polygon points="8,136 172,94 172,114 8,156" fill="#9daab6" class="stroke-dark"/>
+        <g transform="translate(90, 96) rotate(-14)">
+          <text class="sub-text" x="0" y="-23">${topTxt}</text>
+          <rect x="-85" y="-17" width="170" height="34" class="fill-banner stroke-dark"/>
+          <text class="action-title" x="0" y="9">${l1}</text>
+        </g>
+        <g transform="translate(90, 154) rotate(-14)">
+          <rect x="-85" y="-17" width="170" height="34" class="fill-banner stroke-dark"/>
+          <text class="action-title" x="0" y="9">${l2}</text>
+          <text class="sub-text" x="0" y="28">${botTxt}</text>
+        </g>
+        <g class="fill-banner stroke-dark">
+          <polygon points="161,55 173,51 173,59 161,63" /><polygon points="161,66 173,62 173,70 161,74" />
+          <polygon points="7,178 19,174 19,182 7,186" /><polygon points="7,189 19,185 19,193 7,197" />
+        </g>
+      `;
+    }
+
+    else if (type === 'action-single') {
+      const l1 = btn.dataset.line1 || '';
+      const topTxt = btn.dataset.topText || '';
+      const botTxt = btn.dataset.bottomText || '';
+      innerSVG += getActionIcons(btn.dataset.icon) + `
+        <g transform="translate(90, 125) rotate(-14)">
+          <text class="sub-text" x="0" y="-25">${topTxt}</text>
+          <rect x="-85" y="-19" width="170" height="38" class="fill-banner stroke-dark"/>
+          <text class="action-title" x="0" y="10">${l1}</text>
+          <text class="sub-text" x="0" y="30">${botTxt}</text>
+        </g>
+        <g class="fill-banner stroke-dark">
+          <polygon points="161,80 173,76 173,84 161,88" /><polygon points="161,91 173,87 173,95 161,99" />
+          <polygon points="7,151 19,147 19,155 7,159" /><polygon points="7,162 19,158 19,166 7,170" />
+        </g>
+      `;
+    }
+
+    btn.innerHTML = `<svg class="card-svg" viewBox="0 0 180 250" xmlns="http://www.w3.org/2000/svg">${innerSVG}</svg>`;
+  });
+</script>
+
+</body>
+</html>

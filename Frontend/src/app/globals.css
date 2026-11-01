@@ -1,0 +1,216 @@
+@import "tailwindcss";
+
+:root {
+  --flip-navy: #232755;
+  --flip-navy-deep: #181b3d;
+  --flip-gold: #e6d130;
+  --flip-cream: #fbf7e6;
+  --flip-parchment: #efe6c2;
+  --flip-teal: #48b8b8;
+  --flip-mint: #89d5cd;
+  --flip-red: #d62c2c;
+}
+
+body {
+  background-color: #191d42;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(72, 184, 184, 0.22) 0%, transparent 65%),
+    radial-gradient(rgba(230, 209, 48, 0.08) 1px, transparent 1px);
+  background-size: 100% 100%, 18px 18px;
+  color: #fbf7e6;
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel), serif;
+}
+
+.font-oswald {
+  font-family: var(--font-oswald), sans-serif;
+}
+
+/* =========================================================
+   Original Card Styles from card.html
+   ========================================================= */
+.flip7-svg-card {
+  --accent-color: #48b8b8;
+  --frame-gold: #e6d130;
+  --outline-dark: #232755;
+  --bg-main: #efe6c2;
+  --bg-center: #fbf7e6;
+  --banner-bg: #fcf8e3;
+  background: radial-gradient(
+    circle at center,
+    var(--bg-center) 20%,
+    var(--bg-main) 85%
+  );
+  aspect-ratio: 180 / 250;
+}
+
+.stroke-dark {
+  stroke: var(--outline-dark);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.fill-accent {
+  fill: var(--accent-color);
+}
+.fill-gold {
+  fill: var(--frame-gold);
+}
+.fill-banner {
+  fill: var(--banner-bg);
+}
+
+.card-number {
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 112px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.card-number.is-double-digit {
+  font-size: 96px;
+  letter-spacing: -4px;
+}
+
+.card-number.is-bonus {
+  font-size: 88px;
+  letter-spacing: -2px;
+}
+
+.card-number.is-bonus-double {
+  font-size: 74px;
+  letter-spacing: -3px;
+}
+
+.number-outline-outer {
+  fill: none;
+  stroke: var(--outline-dark);
+  stroke-width: 12px;
+  stroke-linejoin: round;
+}
+.number-outline-gold {
+  fill: none;
+  stroke: var(--frame-gold);
+  stroke-width: 7px;
+  stroke-linejoin: round;
+}
+.number-outline-inner {
+  fill: none;
+  stroke: var(--outline-dark);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.number-fill {
+  fill: var(--accent-color);
+}
+
+.card-label {
+  font-family: var(--font-cinzel), serif;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  text-anchor: middle;
+  fill: var(--frame-gold);
+  stroke: var(--outline-dark);
+  stroke-width: 1px;
+  paint-order: stroke fill;
+}
+
+.action-title {
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-anchor: middle;
+  fill: #c9d2d9;
+  stroke: var(--outline-dark);
+  stroke-width: 3.5px;
+  paint-order: stroke fill;
+}
+
+.sub-text {
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-anchor: middle;
+  fill: var(--outline-dark);
+}
+
+/* =========================================================
+   Art-Deco Panels & Manual Ribbon Styles (anleitung_flip_7.pdf)
+   ========================================================= */
+.art-deco-panel {
+  background: radial-gradient(circle at 50% 35%, #fbf7e6 15%, #efe6c2 92%);
+  border: 3px solid #232755;
+  box-shadow:
+    inset 0 0 0 3px #e6d130,
+    inset 0 0 0 5px #232755,
+    0 8px 20px rgba(0, 0, 0, 0.38);
+  color: #232755;
+}
+
+.art-deco-panel-mint {
+  background: radial-gradient(circle at 50% 35%, #d4f4ee 10%, #8cd6cc 90%);
+  border: 3px solid #232755;
+  box-shadow:
+    inset 0 0 0 3px #e6d130,
+    inset 0 0 0 5px #232755,
+    0 8px 20px rgba(0, 0, 0, 0.38);
+  color: #232755;
+}
+
+.art-deco-panel-navy {
+  background: radial-gradient(circle at 50% 25%, #2d336e 10%, #1f234d 90%);
+  border: 3px solid #e6d130;
+  box-shadow:
+    inset 0 0 0 2px #232755,
+    0 8px 20px rgba(0, 0, 0, 0.45);
+  color: #fbf7e6;
+}
+
+/* Keyframes for Intro Logo Animation */
+@keyframes introPop {
+  0% {
+    transform: scale(0.55) rotate(-6deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.04) rotate(1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fanPop {
+  0% {
+    opacity: 0;
+    transform: translateY(35px) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.logo-fan-card {
+  animation: fanPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}

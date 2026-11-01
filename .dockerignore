@@ -1,0 +1,10 @@
+.venv
+__pycache__
+*.pyc
+.idea
+.git
+flip7_tensorboard
+Frontend/node_modules
+Frontend/.next
+*.pdf
+*.png
