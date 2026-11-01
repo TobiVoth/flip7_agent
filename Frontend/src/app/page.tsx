@@ -71,26 +71,61 @@ const INITIAL_STATE: GameStateData = {
   recommendation: "NOCH EINE",
 };
 
+const SESSION_STORAGE_KEY = "flip7_device_session_id";
+const STATE_CACHE_KEY = "flip7_device_cached_state";
+const INTRO_SEEN_KEY = "flip7_intro_seen";
+
+function getOrCreateDeviceSessionId(): string {
+  if (typeof window === "undefined") return "server";
+  let sid = window.localStorage.getItem(SESSION_STORAGE_KEY);
+  if (!sid) {
+    sid =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `dev_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+    window.localStorage.setItem(SESSION_STORAGE_KEY, sid);
+  }
+  return sid;
+}
+
 export default function Flip7AssistantPage() {
   const [gameState, setGameState] = useState<GameStateData>(INITIAL_STATE);
   const [targetMode, setTargetMode] = useState<TargetMode>("me");
-  const [showIntro, setShowIntro] = useState<boolean>(true);
+  const [showIntro, setShowIntro] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiConnected, setApiConnected] = useState<boolean>(true);
   const [lastPlayedCard, setLastPlayedCard] = useState<string | null>(null);
   const prevFlip7Ref = useRef<boolean>(false);
 
+  const updateAndCacheState = useCallback((data: GameStateData) => {
+    setGameState(data);
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(STATE_CACHE_KEY, JSON.stringify(data));
+      } catch {
+        // Ignore storage quota errors
+      }
+    }
+  }, []);
+
   const callApi = useCallback(
     async (endpoint: string, options?: RequestInit): Promise<GameStateData | null> => {
+      const sessionId = getOrCreateDeviceSessionId();
       try {
         const res = await fetch(endpoint, {
           ...options,
+          headers: {
+            ...(options?.headers || {}),
+            "X-Session-ID": sessionId,
+          },
           cache: "no-store",
         });
         if (res.ok) {
           setApiConnected(true);
-          return await res.json();
+          const data = await res.json();
+          updateAndCacheState(data);
+          return data;
         }
         setApiConnected(false);
       } catch {
@@ -98,13 +133,31 @@ export default function Flip7AssistantPage() {
       }
       return null;
     },
-    []
+    [updateAndCacheState]
   );
 
   useEffect(() => {
-    callApi("/api/state").then((data) => {
-      if (data) setGameState(data);
-    });
+    // 1. Prüfen, ob Intro auf diesem Gerät schon gesehen wurde (beim ersten Öffnen abspielen, beim Neuladen nicht stören)
+    if (typeof window !== "undefined") {
+      const introSeen = window.sessionStorage.getItem(INTRO_SEEN_KEY);
+      if (!introSeen) {
+        setShowIntro(true);
+        window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+      }
+
+      // 2. Sofort gecachten Gerätestand aus localStorage wiederherstellen
+      const cached = window.localStorage.getItem(STATE_CACHE_KEY);
+      if (cached) {
+        try {
+          setGameState(JSON.parse(cached));
+        } catch {
+          // Ignore invalid JSON
+        }
+      }
+    }
+
+    // 3. Aktuellen Gerätestand anhand der X-Session-ID vom Server abrufen
+    callApi("/api/state");
   }, [callApi]);
 
   // Trigger celebratory confetti when achieving FLIP 7 (7 unique number cards!)

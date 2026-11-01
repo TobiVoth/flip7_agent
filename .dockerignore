@@ -8,3 +8,4 @@ Frontend/node_modules
 Frontend/.next
 *.pdf
 *.png
+sessions_data.json

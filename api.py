@@ -1,20 +1,26 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
+import json
+import os
 import numpy as np
 import torch
 from stable_baselines3 import PPO
 
 app = FastAPI(title="Flip 7 AI Assistant API")
 
-# CORS freigeben, damit das HTML-Frontend problemlos auf die API zugreifen kann
+# CORS freigeben
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# PPO-Modell einmalig beim Start in den Speicher laden (wird von allen Geräte-Sessions geteilt)
+SHARED_MODEL = PPO.load("flip7_agent")
+SESSIONS_FILE = "sessions_data.json"
 
 
 class CardAction(BaseModel):
@@ -23,8 +29,8 @@ class CardAction(BaseModel):
 
 
 class GameState:
-    def __init__(self, model_path: str = "flip7_agent"):
-        self.model = PPO.load(model_path)
+    def __init__(self):
+        self.model = SHARED_MODEL
         self.history = []
         self.reset_deck()
         self.reset_hand()
@@ -157,8 +163,85 @@ class GameState:
             "recommendation": "VERZOCKT!" if self.busted else ("FLIP 7!" if is_flip7 else ("NOCH EINE" if prob_hit >= prob_stop else "STOPP")),
         }
 
+    def to_dict(self) -> dict:
+        return {
+            "deck_counts": self.deck_counts,
+            "hand_numbers": self.hand_numbers.tolist(),
+            "has_second_chance": self.has_second_chance,
+            "has_x2": self.has_x2,
+            "bonus_cards": self.bonus_cards,
+            "busted": self.busted,
+            "history": [
+                {
+                    "deck_counts": snap["deck_counts"],
+                    "hand_numbers": snap["hand_numbers"].tolist(),
+                    "has_second_chance": snap["has_second_chance"],
+                    "has_x2": snap["has_x2"],
+                    "bonus_cards": snap["bonus_cards"],
+                    "busted": snap["busted"],
+                }
+                for snap in self.history[-40:]  # Letzte 40 Schritte pro Gerät behalten
+            ],
+        }
 
-state = GameState("flip7_agent")
+    @classmethod
+    def from_dict(cls, data: dict) -> "GameState":
+        gs = cls()
+        gs.deck_counts = data.get("deck_counts", gs.deck_counts)
+        gs.hand_numbers = np.array(data.get("hand_numbers", [0] * 13), dtype=np.int32)
+        gs.has_second_chance = bool(data.get("has_second_chance", False))
+        gs.has_x2 = bool(data.get("has_x2", False))
+        gs.bonus_cards = list(data.get("bonus_cards", []))
+        gs.busted = bool(data.get("busted", False))
+        gs.history = [
+            {
+                "deck_counts": snap["deck_counts"],
+                "hand_numbers": np.array(snap["hand_numbers"], dtype=np.int32),
+                "has_second_chance": bool(snap["has_second_chance"]),
+                "has_x2": bool(snap["has_x2"]),
+                "bonus_cards": list(snap["bonus_cards"]),
+                "busted": bool(snap["busted"]),
+            }
+            for snap in data.get("history", [])
+        ]
+        return gs
+
+
+# Verwaltet für jedes Gerät (anhand der X-Session-ID) einen eigenen Spielstand
+sessions: dict[str, GameState] = {}
+
+
+def load_sessions_from_disk():
+    if os.path.exists(SESSIONS_FILE):
+        try:
+            with open(SESSIONS_FILE, "r", encoding="utf-8") as f:
+                raw = json.load(f)
+            for sid, sdata in raw.items():
+                sessions[sid] = GameState.from_dict(sdata)
+        except Exception as e:
+            print(f"[Flip 7] Konnte gespeicherte Sessions nicht laden: {e}")
+
+
+def save_sessions_to_disk():
+    try:
+        # Maximal die letzten 200 Geräte-Sessions speichern
+        recent_keys = list(sessions.keys())[-200:]
+        raw = {sid: sessions[sid].to_dict() for sid in recent_keys}
+        with open(SESSIONS_FILE, "w", encoding="utf-8") as f:
+            json.dump(raw, f)
+    except Exception as e:
+        print(f"[Flip 7] Konnte Sessions nicht speichern: {e}")
+
+
+def get_session(session_id: str) -> GameState:
+    sid = (session_id or "default").strip()[:64]
+    if sid not in sessions:
+        sessions[sid] = GameState()
+        save_sessions_to_disk()
+    return sessions[sid]
+
+
+load_sessions_from_disk()
 
 
 @app.get("/")
@@ -167,32 +250,41 @@ def serve_frontend():
 
 
 @app.get("/api/state")
-def get_state():
+def get_state(x_session_id: str = Header(default="default")):
+    state = get_session(x_session_id)
     return state.get_status()
 
 
 @app.post("/api/card")
-def play_card(action: CardAction):
+def play_card(action: CardAction, x_session_id: str = Header(default="default")):
+    state = get_session(x_session_id)
     state.add_card(action.card, is_me=(action.target == "me"))
+    save_sessions_to_disk()
     return state.get_status()
 
 
 @app.post("/api/undo")
-def undo_last():
+def undo_last(x_session_id: str = Header(default="default")):
+    state = get_session(x_session_id)
     state.undo()
+    save_sessions_to_disk()
     return state.get_status()
 
 
 @app.post("/api/reset_round")
-def reset_round():
+def reset_round(x_session_id: str = Header(default="default")):
+    state = get_session(x_session_id)
     state.save_snapshot()
     state.reset_hand()
+    save_sessions_to_disk()
     return state.get_status()
 
 
 @app.post("/api/reset_deck")
-def reset_deck():
+def reset_deck(x_session_id: str = Header(default="default")):
+    state = get_session(x_session_id)
     state.save_snapshot()
     state.reset_deck()
     state.reset_hand()
+    save_sessions_to_disk()
     return state.get_status()

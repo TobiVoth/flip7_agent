@@ -12,12 +12,14 @@ async function proxyToFastApi(
   const { path } = await context.params;
   const targetPath = path.join("/");
   const targetUrl = `${INTERNAL_API_BASE}/api/${targetPath}`;
+  const sessionId = req.headers.get("x-session-id") || "default";
 
   try {
     const init: RequestInit = {
       method: req.method,
       headers: {
         "Content-Type": "application/json",
+        "X-Session-ID": sessionId,
       },
       cache: "no-store",
     };

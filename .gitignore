@@ -32,6 +32,7 @@ env/
 flip7_tensorboard/
 runs/
 *tfevents*
+sessions_data.json
 
 # WICHTIG: Das trainierte PPO-Modell wird für API & Docker benötigt und nicht ignoriert
 !flip7_agent.zip
